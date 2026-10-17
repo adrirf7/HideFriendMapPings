@@ -4,6 +4,10 @@ A BepInEx mod for Valheim that adds two checkboxes to the large map: one shows /
 
 [Versión en español](README.es.md)
 
+Why: after reading the cartography table on a busy server, the map can end up like this, and the game can only hide all shared data at once.
+
+![Map cluttered with shared pins](docs/cluttered_map.jpg)
+
 ![The two new checkboxes on the large map](docs/map_toggles.png)
 
 ## Features

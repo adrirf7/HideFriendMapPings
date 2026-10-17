@@ -4,6 +4,10 @@ Mod de BepInEx para Valheim que añade dos casillas al mapa grande: una muestra 
 
 [English version](README.md)
 
+El motivo: tras leer la mesa de cartografía en un servidor con mucha gente, el mapa puede acabar así, y el juego solo permite ocultar todo lo compartido a la vez.
+
+![Mapa saturado de marcadores compartidos](docs/cluttered_map.jpg)
+
 ![Las dos casillas nuevas en el mapa grande](docs/map_toggles.png)
 
 ## Características

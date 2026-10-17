@@ -2,6 +2,14 @@
 
 Your friends shared their map at the cartography table and now yours is full of their pins and areas you've never been to? **HideFriendMapPings** adds two checkboxes to the large map so you can hide what came from the table and see only your own pins and your own exploration, then bring it all back with one click.
 
+## The problem
+
+Read the cartography table once on a busy server and this is what your map turns into: hundreds of other players' pins and names piled on top of each other, until you can't find your own base, your portals or where you have actually been. The game only lets you hide everything shared at once, map and pins together.
+
+![A real map after reading the cartography table on a shared server](https://raw.githubusercontent.com/adrirf7/HideFriendMapPings/main/docs/cluttered_map.jpg)
+
+HideFriendMapPings lets you hide the shared pins and the shared map **separately**, so you can keep the explored terrain and drop the clutter, or the other way round.
+
 ![The two new checkboxes on the large map](https://raw.githubusercontent.com/adrirf7/HideFriendMapPings/main/docs/map_toggles.png)
 
 ## Features
