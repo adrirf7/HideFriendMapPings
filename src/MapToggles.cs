@@ -8,9 +8,9 @@ using Object = UnityEngine.Object;
 namespace HideFriendMapPings
 {
     /// <summary>
-    /// Casillas del mapa grande para mostrar / ocultar los marcadores y las zonas exploradas que vienen de la
-    /// mesa de cartografía. Son copias de la casilla "Visible para otros jugadores" del juego, apiladas encima
-    /// de ella y de la casilla "Mesa de cartografía" del juego.
+    /// Casillas del mapa grande para mostrar / ocultar el mapa compartido, los marcadores compartidos y los propios.
+    /// Son copias de la casilla "Visible para otros jugadores" del juego, apiladas encima de ella. Sustituyen a la
+    /// casilla "Mesa de cartografía" del juego (que ocultaba mapa y marcadores compartidos a la vez), que se oculta.
     /// </summary>
     internal static class MapToggles
     {
@@ -18,14 +18,17 @@ namespace HideFriendMapPings
 
         private static readonly int s_sharedFadeId = Shader.PropertyToID("_SharedFade");
 
-        private static Minimap s_minimap;
         private static Toggle s_source;
-        private static Toggle s_pinsToggle;
         private static Toggle s_mapToggle;
+        private static Toggle s_sharedPinsToggle;
+        private static Toggle s_ownPinsToggle;
 
         internal static void Create(Minimap minimap)
         {
-            s_minimap = minimap;
+            // Sin la casilla del juego nadie puede apagar lo compartido por su cuenta: que lo controlen solo las nuestras.
+            minimap.m_showSharedMapData = true;
+            HideGameSharedToggle(minimap);
+
             s_source = minimap.m_publicPosition;
             if (s_source == null)
             {
@@ -36,8 +39,10 @@ namespace HideFriendMapPings
             {
                 s_mapToggle = CloneToggle(s_source, "HFMP_SharedMap", HideFriendMapPingsPlugin.ShowSharedMap.Value,
                     isOn => HideFriendMapPingsPlugin.ShowSharedMap.Value = isOn);
-                s_pinsToggle = CloneToggle(s_source, "HFMP_SharedPins", HideFriendMapPingsPlugin.ShowSharedPins.Value,
+                s_sharedPinsToggle = CloneToggle(s_source, "HFMP_SharedPins", HideFriendMapPingsPlugin.ShowSharedPins.Value,
                     isOn => HideFriendMapPingsPlugin.ShowSharedPins.Value = isOn);
+                s_ownPinsToggle = CloneToggle(s_source, "HFMP_OwnPins", HideFriendMapPingsPlugin.ShowOwnPins.Value,
+                    isOn => HideFriendMapPingsPlugin.ShowOwnPins.Value = isOn);
                 UpdatePositions();
                 RefreshTexts();
             }
@@ -47,10 +52,19 @@ namespace HideFriendMapPings
             }
         }
 
+        /// <summary>El juego la vuelve a activar cada vez que encuentra datos compartidos.</summary>
+        internal static void HideGameSharedToggle(Minimap minimap)
+        {
+            if (minimap.m_sharedMapHint != null && minimap.m_sharedMapHint.activeSelf)
+            {
+                minimap.m_sharedMapHint.SetActive(false);
+            }
+        }
+
         /// <summary>
-        /// Encima de la casilla "Visible para otros jugadores" y de la de "Mesa de cartografía" (aunque esta solo
-        /// aparezca cuando hay datos compartidos): primero la del mapa y, sobre ella, la de los marcadores.
-        /// Se usa el tamaño visual (fondo incluido), no el del RectTransform de la casilla, que es más pequeño.
+        /// Encima de la casilla "Visible para otros jugadores", de abajo arriba: mapa compartido, marcadores
+        /// compartidos y mis marcadores. Se usa el tamaño visual (fondo incluido), no el del RectTransform de la
+        /// casilla, que es más pequeño.
         /// </summary>
         internal static void UpdatePositions()
         {
@@ -59,40 +73,27 @@ namespace HideFriendMapPings
                 return;
             }
             RectTransform source = (RectTransform)s_source.transform;
-            RectTransform space = (RectTransform)source.parent;
-            Rect sourceBounds = VisualBounds(source, space);
-
-            float top = sourceBounds.yMax;
-            if (s_minimap != null && s_minimap.m_sharedMapHint != null)
-            {
-                Rect hintBounds = VisualBounds((RectTransform)s_minimap.m_sharedMapHint.transform, space);
-                top = Mathf.Max(top, hintBounds.yMax);
-            }
-
-            Vector2 offset = HideFriendMapPingsPlugin.TogglesOffset.Value;
-            float height = sourceBounds.height;
-            float firstBottom = top + Gap;
-            SetPosition(s_mapToggle, source.anchoredPosition + offset + new Vector2(0f, firstBottom - sourceBounds.yMin));
-            SetPosition(s_pinsToggle, source.anchoredPosition + offset + new Vector2(0f, firstBottom + height + Gap - sourceBounds.yMin));
+            Rect bounds = VisualBounds(source, (RectTransform)source.parent);
+            float step = bounds.height + Gap;
+            Vector2 basePosition = source.anchoredPosition + HideFriendMapPingsPlugin.TogglesOffset.Value;
+            SetPosition(s_mapToggle, basePosition + new Vector2(0f, step));
+            SetPosition(s_sharedPinsToggle, basePosition + new Vector2(0f, step * 2f));
+            SetPosition(s_ownPinsToggle, basePosition + new Vector2(0f, step * 3f));
         }
 
         internal static void RefreshTexts()
         {
-            SetText(s_pinsToggle, "$hfmp_shared_pins");
             SetText(s_mapToggle, "$hfmp_shared_map");
+            SetText(s_sharedPinsToggle, "$hfmp_shared_pins");
+            SetText(s_ownPinsToggle, "$hfmp_own_pins");
         }
 
         /// <summary>Cambio desde la casilla o desde el archivo de configuración (p. ej. con ConfigurationManager).</summary>
         internal static void OnSettingsChanged()
         {
-            if (s_pinsToggle != null)
-            {
-                s_pinsToggle.SetIsOnWithoutNotify(HideFriendMapPingsPlugin.ShowSharedPins.Value);
-            }
-            if (s_mapToggle != null)
-            {
-                s_mapToggle.SetIsOnWithoutNotify(HideFriendMapPingsPlugin.ShowSharedMap.Value);
-            }
+            SetIsOn(s_mapToggle, HideFriendMapPingsPlugin.ShowSharedMap.Value);
+            SetIsOn(s_sharedPinsToggle, HideFriendMapPingsPlugin.ShowSharedPins.Value);
+            SetIsOn(s_ownPinsToggle, HideFriendMapPingsPlugin.ShowOwnPins.Value);
             if (Minimap.instance != null)
             {
                 Minimap.instance.m_pinUpdateRequired = true;
@@ -101,8 +102,8 @@ namespace HideFriendMapPings
         }
 
         /// <summary>
-        /// El shader del mapa mezcla la niebla quitada por otros jugadores según "_SharedFade". El juego lo ajusta
-        /// con su propio botón (que oculta mapa y marcadores a la vez); aquí se fuerza a 0 si solo se quiere lo propio.
+        /// El shader del mapa mezcla la niebla quitada por otros jugadores según "_SharedFade"; se fuerza a 0 si
+        /// solo se quiere ver lo explorado por uno mismo.
         /// </summary>
         internal static void ApplySharedMapFade(Minimap minimap)
         {
@@ -193,6 +194,14 @@ namespace HideFriendMapPings
             toggle.SetIsOnWithoutNotify(isOn);
             toggle.onValueChanged.AddListener(value => onChanged(value));
             return toggle;
+        }
+
+        private static void SetIsOn(Toggle toggle, bool isOn)
+        {
+            if (toggle != null)
+            {
+                toggle.SetIsOnWithoutNotify(isOn);
+            }
         }
 
         private static void SetPosition(Toggle toggle, Vector2 position)

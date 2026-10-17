@@ -2,7 +2,7 @@
     "name": "HideFriendMapPings",
     "version_number": "1.0.0",
     "website_url": "https://github.com/adrirf7/HideFriendMapPings",
-    "description": "Two checkboxes on the large map: hide the pins other players shared through the cartography table, and hide the map areas they explored, so you only see your own. Nothing is deleted. Client-side only.",
+    "description": "Three checkboxes on the large map: hide the map areas other players explored, the pins they shared through the cartography table, or your own pins. Nothing is deleted. Client-side only.",
     "dependencies": [
         "denikson-BepInExPack_Valheim-5.4.2351"
     ]

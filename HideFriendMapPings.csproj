@@ -81,6 +81,7 @@
   <!-- En Release, crea en release\ el zip para Nexus Mods y el de Thunderstore -->
   <Target Name="PackageRelease" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
     <PropertyGroup>
+      <PackageName>MapPinFilter</PackageName>
       <PackageDir>$(MSBuildProjectDirectory)\obj\package</PackageDir>
       <ReleaseDir>$(MSBuildProjectDirectory)\release</ReleaseDir>
     </PropertyGroup>
@@ -88,10 +89,10 @@
     <MakeDir Directories="$(ReleaseDir)" />
 
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PackageDir)\nexus\BepInEx\plugins\HideFriendMapPings" />
-    <ZipDirectory SourceDirectory="$(PackageDir)\nexus" DestinationFile="$(ReleaseDir)\HideFriendMapPings-$(Version)-nexus.zip" Overwrite="true" />
+    <ZipDirectory SourceDirectory="$(PackageDir)\nexus" DestinationFile="$(ReleaseDir)\$(PackageName)-$(Version)-nexus.zip" Overwrite="true" />
 
     <Copy SourceFiles="$(TargetPath);thunderstore\manifest.json;thunderstore\README.md;thunderstore\icon.png" DestinationFolder="$(PackageDir)\thunderstore" />
-    <ZipDirectory SourceDirectory="$(PackageDir)\thunderstore" DestinationFile="$(ReleaseDir)\HideFriendMapPings-$(Version)-thunderstore.zip" Overwrite="true" />
+    <ZipDirectory SourceDirectory="$(PackageDir)\thunderstore" DestinationFile="$(ReleaseDir)\$(PackageName)-$(Version)-thunderstore.zip" Overwrite="true" />
 
     <Message Importance="high" Text="Paquetes de Nexus y Thunderstore creados en $(ReleaseDir)" />
   </Target>

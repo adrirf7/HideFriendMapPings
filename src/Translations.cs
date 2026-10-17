@@ -14,26 +14,26 @@ namespace HideFriendMapPings
         // Orden de las claves; cada idioma da sus textos en este mismo orden.
         private static readonly string[] s_keys =
         {
-            "hfmp_shared_pins", "hfmp_shared_map"
+            "hfmp_shared_pins", "hfmp_shared_map", "hfmp_own_pins"
         };
 
         // idioma -> textos (mismo orden que s_keys)
         private static readonly Dictionary<string, string[]> s_languages = new Dictionary<string, string[]>
         {
-            ["English"] = new[] { "Shared pins", "Shared map" },
-            ["Spanish"] = new[] { "Marcadores compartidos", "Mapa compartido" },
-            ["German"] = new[] { "Geteilte Markierungen", "Geteilte Karte" },
-            ["French"] = new[] { "Marqueurs partagés", "Carte partagée" },
-            ["Italian"] = new[] { "Segnalini condivisi", "Mappa condivisa" },
-            ["Portuguese_Brazilian"] = new[] { "Marcadores compartilhados", "Mapa compartilhado" },
-            ["Portuguese_European"] = new[] { "Marcadores partilhados", "Mapa partilhado" },
-            ["Russian"] = new[] { "Общие метки", "Общая карта" },
-            ["Ukrainian"] = new[] { "Спільні мітки", "Спільна мапа" },
-            ["Polish"] = new[] { "Udostępnione znaczniki", "Udostępniona mapa" },
-            ["Chinese"] = new[] { "共享标记", "共享地图" },
-            ["Chinese_Trad"] = new[] { "共享標記", "共享地圖" },
-            ["Japanese"] = new[] { "共有ピン", "共有マップ" },
-            ["Korean"] = new[] { "공유된 핀", "공유된 지도" },
+            ["English"] = new[] { "Shared pins", "Shared map", "My pins" },
+            ["Spanish"] = new[] { "Marcadores compartidos", "Mapa compartido", "Mis marcadores" },
+            ["German"] = new[] { "Geteilte Markierungen", "Geteilte Karte", "Eigene Markierungen" },
+            ["French"] = new[] { "Marqueurs partagés", "Carte partagée", "Mes marqueurs" },
+            ["Italian"] = new[] { "Segnalini condivisi", "Mappa condivisa", "I miei segnalini" },
+            ["Portuguese_Brazilian"] = new[] { "Marcadores compartilhados", "Mapa compartilhado", "Meus marcadores" },
+            ["Portuguese_European"] = new[] { "Marcadores partilhados", "Mapa partilhado", "Os meus marcadores" },
+            ["Russian"] = new[] { "Общие метки", "Общая карта", "Мои метки" },
+            ["Ukrainian"] = new[] { "Спільні мітки", "Спільна мапа", "Мої мітки" },
+            ["Polish"] = new[] { "Udostępnione znaczniki", "Udostępniona mapa", "Moje znaczniki" },
+            ["Chinese"] = new[] { "共享标记", "共享地图", "我的标记" },
+            ["Chinese_Trad"] = new[] { "共享標記", "共享地圖", "我的標記" },
+            ["Japanese"] = new[] { "共有ピン", "共有マップ", "自分のピン" },
+            ["Korean"] = new[] { "공유된 핀", "공유된 지도", "내 핀" },
         };
 
         internal static void Register(Localization localization, string language)
