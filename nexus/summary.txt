@@ -1,0 +1,1 @@
+Adds two checkboxes to the large map: hide the pins other players shared through the cartography table, and hide the map areas they explored, so you only see your own pins and exploration. Nothing is deleted, one click brings it all back. Client-side, translated into 14 languages.
